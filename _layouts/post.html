@@ -23,25 +23,9 @@ layout: default
     {% endif %}
   </header>
 
-  <!-- 文章正文 + 目录（并排） -->
-  <div class="post-body-wrapper">
-    <!-- 目录（桌面固定，移动端折叠） -->
-    <aside class="post-toc" id="post-toc">
-      <div class="toc-header">
-        <i class="fas fa-list-ul"></i> 目录
-        <button class="toc-toggle" aria-label="Toggle table of contents">
-          <i class="fas fa-chevron-down"></i>
-        </button>
-      </div>
-      <nav class="toc-content" id="toc-content">
-        <!-- 由 JavaScript 动态生成 -->
-      </nav>
-    </aside>
-
-    <!-- 正文内容 -->
-    <div class="post-content">
-      {{ content }}
-    </div>
+  <!-- 正文内容（全宽，不受目录影响） -->
+  <div class="post-content">
+    {{ content }}
   </div>
 
   <!-- 社交分享 -->
@@ -74,15 +58,31 @@ layout: default
  
 </article>
 
-<!-- 目录生成 JavaScript -->
+<!-- ===== 悬浮目录（固定定位） ===== -->
+<aside class="floating-toc" id="floating-toc">
+  <button class="toc-toggle-btn" id="toc-toggle-btn" aria-label="切换目录">
+    <i class="fas fa-list-ul"></i>
+    <span class="toc-toggle-label">目录</span>
+  </button>
+  <div class="toc-panel" id="toc-panel">
+    <div class="toc-header">
+      <span><i class="fas fa-list-ul"></i> 文章目录</span>
+      <button class="toc-close-btn" id="toc-close-btn" aria-label="关闭目录"><i class="fas fa-times"></i></button>
+    </div>
+    <nav class="toc-content" id="toc-content">
+      <!-- 由 JavaScript 动态生成 -->
+    </nav>
+  </div>
+</aside>
+
+<!-- JavaScript：生成目录，控制折叠，滚动高亮 -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // 获取正文中的所有标题（h2, h3）
     const content = document.querySelector('.post-content');
     if (!content) return;
     const headers = content.querySelectorAll('h2, h3');
     if (headers.length === 0) {
-      document.getElementById('post-toc').style.display = 'none';
+      document.getElementById('floating-toc').style.display = 'none';
       return;
     }
 
@@ -93,11 +93,9 @@ layout: default
     let currentUl = null;
 
     headers.forEach((header, index) => {
-      // 确保每个标题都有 id（用于锚点）
       if (!header.id) {
         header.id = 'section-' + index;
       }
-
       const level = header.tagName.toLowerCase();
       const link = document.createElement('a');
       link.href = '#' + header.id;
@@ -107,19 +105,16 @@ layout: default
       const listItem = document.createElement('li');
 
       if (level === 'h2') {
-        // 新的一级条目
         currentH2 = listItem;
         currentH2.appendChild(link);
         currentUl = document.createElement('ul');
         currentH2.appendChild(currentUl);
         tocList.appendChild(currentH2);
       } else if (level === 'h3' && currentUl) {
-        // 添加到当前 h2 的子列表
         const subItem = document.createElement('li');
         subItem.appendChild(link);
         currentUl.appendChild(subItem);
       } else {
-        // fallback: 作为顶级条目
         listItem.appendChild(link);
         tocList.appendChild(listItem);
       }
@@ -127,16 +122,42 @@ layout: default
 
     tocContainer.appendChild(tocList);
 
-    // 移动端折叠功能
-    const toggleBtn = document.querySelector('.toc-toggle');
-    const tocContent = document.getElementById('toc-content');
-    toggleBtn.addEventListener('click', function() {
-      const isCollapsed = tocContent.style.display === 'none';
-      tocContent.style.display = isCollapsed ? 'block' : 'none';
-      this.querySelector('i').className = isCollapsed ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    // 控制面板显示
+    const panel = document.getElementById('toc-panel');
+    const toggleBtn = document.getElementById('toc-toggle-btn');
+    const closeBtn = document.getElementById('toc-close-btn');
+
+    function openToc() {
+      panel.classList.add('open');
+      toggleBtn.classList.add('active');
+    }
+    function closeToc() {
+      panel.classList.remove('open');
+      toggleBtn.classList.remove('active');
+    }
+
+    toggleBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (panel.classList.contains('open')) {
+        closeToc();
+      } else {
+        openToc();
+      }
+    });
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeToc();
     });
 
-    // 点击目录链接平滑滚动
+    // 点击外部关闭（可选）
+    document.addEventListener('click', function(e) {
+      const toc = document.getElementById('floating-toc');
+      if (!toc.contains(e.target)) {
+        closeToc();
+      }
+    });
+
+    // 点击目录链接平滑滚动并高亮
     document.querySelectorAll('.toc-link').forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -144,26 +165,36 @@ layout: default
         const target = document.getElementById(targetId);
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          // 更新高亮
           document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
           this.classList.add('active');
+          // 移动端自动关闭
+          if (window.innerWidth <= 768) {
+            closeToc();
+          }
         }
       });
     });
 
-    // 滚动时高亮当前章节
+    // 滚动高亮当前章节
+    let ticking = false;
     window.addEventListener('scroll', function() {
-      const scrollY = window.scrollY;
-      let currentId = null;
-      headers.forEach(header => {
-        const rect = header.getBoundingClientRect();
-        if (rect.top <= 100) {
-          currentId = header.id;
-        }
-      });
-      document.querySelectorAll('.toc-link').forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
-      });
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          const scrollY = window.scrollY;
+          let currentId = null;
+          headers.forEach(header => {
+            const rect = header.getBoundingClientRect();
+            if (rect.top <= 100) {
+              currentId = header.id;
+            }
+          });
+          document.querySelectorAll('.toc-link').forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
     });
   });
 </script>
