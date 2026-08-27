@@ -1,0 +1,36 @@
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <div class="sidebar-brand">
+      <i class="fas fa-shield-halved"></i> {{ site.author }}
+    </div>
+    <div class="sidebar-sub">{{ site.description | truncatewords: 4 }}</div>
+    <ul class="sidebar-nav">
+      {% for link in site.navbar-links %}
+        {% assign link_url = link[1] %}
+        {% assign link_name = link[0] %}
+        {% comment %} 判断是否为绝对URL，是则原样输出，否则加相对路径 {% endcomment %}
+        {% if link_url contains '://' %}
+          {% assign href = link_url %}
+        {% else %}
+          {% assign href = link_url | relative_url %}
+        {% endif %}
+        <li>
+          <a href="{{ href }}" {% if page.url == href or (link_name == 'Tags' and page.url contains '/tags') or (link_name == 'Archive' and page.url contains '/archive') %}class="active"{% endif %}>
+            {{ link_name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="sidebar-social">
+    {% if site.social-network-links.rss %}
+      <a href="{{ '/feed.xml' | relative_url }}" title="RSS"><i class="fas fa-rss"></i></a>
+    {% endif %}
+    {% if site.social-network-links.github %}
+      <a href="https://github.com/{{ site.social-network-links.github }}" title="GitHub"><i class="fab fa-github"></i></a>
+    {% endif %}
+    {% if site.social-network-links.email %}
+      <a href="mailto:{{ site.social-network-links.email }}" title="Email"><i class="fas fa-envelope"></i></a>
+    {% endif %}
+  </div>
+</aside>
