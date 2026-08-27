@@ -149,13 +149,7 @@ layout: default
       closeToc();
     });
 
-    // 点击外部关闭（可选）
-    document.addEventListener('click', function(e) {
-      const toc = document.getElementById('floating-toc');
-      if (!toc.contains(e.target)) {
-        closeToc();
-      }
-    });
+    // === 已移除“点击外部关闭”功能 ===
 
     // 点击目录链接平滑滚动并高亮
     document.querySelectorAll('.toc-link').forEach(link => {
@@ -167,7 +161,7 @@ layout: default
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
           this.classList.add('active');
-          // 移动端自动关闭
+          // 移动端自动关闭（保留）
           if (window.innerWidth <= 768) {
             closeToc();
           }
