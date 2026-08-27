@@ -402,3 +402,58 @@ body {
   white-space: nowrap;
   margin-left: 1rem;
 }
+
+/* ===== Archive Page ===== */
+.archive-year {
+  margin-bottom: 2.5rem;
+}
+.archive-year-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-light);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.8rem;
+}
+.archive-month {
+  margin-bottom: 1.2rem;
+}
+.archive-month-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  padding-left: 0.5rem;
+  border-left: 3px solid var(--accent);
+}
+.archive-post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 1.2rem;
+}
+.archive-post-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.02);
+}
+.archive-post-list li:last-child {
+  border-bottom: none;
+}
+.archive-post-list a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.archive-post-list a:hover {
+  color: var(--accent);
+}
+.archive-post-list .post-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  margin-left: 1rem;
+}
