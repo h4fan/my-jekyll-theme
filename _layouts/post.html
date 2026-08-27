@@ -23,11 +23,28 @@ layout: default
     {% endif %}
   </header>
 
-  <div class="post-content">
-    {{ content }}
+  <!-- 文章正文 + 目录（并排） -->
+  <div class="post-body-wrapper">
+    <!-- 目录（桌面固定，移动端折叠） -->
+    <aside class="post-toc" id="post-toc">
+      <div class="toc-header">
+        <i class="fas fa-list-ul"></i> 目录
+        <button class="toc-toggle" aria-label="Toggle table of contents">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+      </div>
+      <nav class="toc-content" id="toc-content">
+        <!-- 由 JavaScript 动态生成 -->
+      </nav>
+    </aside>
+
+    <!-- 正文内容 -->
+    <div class="post-content">
+      {{ content }}
+    </div>
   </div>
 
-  <!-- 社交分享（可选，根据 site.social-share 控制） -->
+  <!-- 社交分享 -->
   {% if site.social-share or page.social-share %}
     <div class="post-share">
       <span class="share-label">分享到：</span>
@@ -54,28 +71,99 @@ layout: default
     {% endif %}
   </nav>
 
-  <!-- 评论区域（占位，可根据需要集成 Giscus/Utterances/Disqus） -->
-  {% if site.comments or page.comments %}
-    <div class="post-comments">
-      <!-- 在这里添加评论系统的代码，例如： -->
-      <!-- 
-      <script src="https://giscus.app/client.js"
-        data-repo="h4fan/comment"
-        data-repo-id="..."
-        data-category="..."
-        data-category-id="..."
-        data-mapping="title"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="light"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-      </script>
-      -->
-      <p class="comments-placeholder"><i class="fas fa-comment"></i> 评论功能暂未开启</p>
-    </div>
-  {% endif %}
+ 
 </article>
+
+<!-- 目录生成 JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 获取正文中的所有标题（h2, h3）
+    const content = document.querySelector('.post-content');
+    if (!content) return;
+    const headers = content.querySelectorAll('h2, h3');
+    if (headers.length === 0) {
+      document.getElementById('post-toc').style.display = 'none';
+      return;
+    }
+
+    // 构建目录树
+    const tocContainer = document.getElementById('toc-content');
+    const tocList = document.createElement('ul');
+    let currentH2 = null;
+    let currentUl = null;
+
+    headers.forEach((header, index) => {
+      // 确保每个标题都有 id（用于锚点）
+      if (!header.id) {
+        header.id = 'section-' + index;
+      }
+
+      const level = header.tagName.toLowerCase();
+      const link = document.createElement('a');
+      link.href = '#' + header.id;
+      link.textContent = header.textContent;
+      link.className = 'toc-link';
+
+      const listItem = document.createElement('li');
+
+      if (level === 'h2') {
+        // 新的一级条目
+        currentH2 = listItem;
+        currentH2.appendChild(link);
+        currentUl = document.createElement('ul');
+        currentH2.appendChild(currentUl);
+        tocList.appendChild(currentH2);
+      } else if (level === 'h3' && currentUl) {
+        // 添加到当前 h2 的子列表
+        const subItem = document.createElement('li');
+        subItem.appendChild(link);
+        currentUl.appendChild(subItem);
+      } else {
+        // fallback: 作为顶级条目
+        listItem.appendChild(link);
+        tocList.appendChild(listItem);
+      }
+    });
+
+    tocContainer.appendChild(tocList);
+
+    // 移动端折叠功能
+    const toggleBtn = document.querySelector('.toc-toggle');
+    const tocContent = document.getElementById('toc-content');
+    toggleBtn.addEventListener('click', function() {
+      const isCollapsed = tocContent.style.display === 'none';
+      tocContent.style.display = isCollapsed ? 'block' : 'none';
+      this.querySelector('i').className = isCollapsed ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    });
+
+    // 点击目录链接平滑滚动
+    document.querySelectorAll('.toc-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // 更新高亮
+          document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        }
+      });
+    });
+
+    // 滚动时高亮当前章节
+    window.addEventListener('scroll', function() {
+      const scrollY = window.scrollY;
+      let currentId = null;
+      headers.forEach(header => {
+        const rect = header.getBoundingClientRect();
+        if (rect.top <= 100) {
+          currentId = header.id;
+        }
+      });
+      document.querySelectorAll('.toc-link').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+      });
+    });
+  });
+</script>
