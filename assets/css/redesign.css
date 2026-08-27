@@ -578,49 +578,65 @@ body {
 }
 
 /* ---- 代码块美化 ---- */
+/* ---- 代码块高亮（高对比度版） ---- */
 .post-content .highlight {
   position: relative;
   margin: 1.2rem 0;
   border-radius: 8px;
   overflow: auto;
-  background: #1e1e2e; /* 深色背景（类似 VS Code） */
-  border: 1px solid #3c3c4a;
+  background: #1e1e2e; /* 深色背景 */
+  border: 1px solid #44475a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 .post-content .highlight pre {
   padding: 1rem 1.2rem;
   margin: 0;
   font-family: 'JetBrains Mono', 'Consolas', monospace;
   font-size: 0.9rem;
-  line-height: 1.5;
-  color: #cdd6f4;
+  line-height: 1.6;
+  color: #f8f8f2; /* 高亮度主体文字 */
   background: transparent;
   overflow-x: auto;
 }
-/* Rouge 语法高亮颜色（适配深色背景） */
-.post-content .highlight .k { color: #cba6f7; font-weight: 600; } /* keyword */
-.post-content .highlight .n { color: #cdd6f4; } /* name */
-.post-content .highlight .s { color: #a6e3a1; } /* string */
-.post-content .highlight .c { color: #6c7086; font-style: italic; } /* comment */
-.post-content .highlight .p { color: #cdd6f4; } /* punctuation */
-.post-content .highlight .o { color: #89b4fa; } /* operator */
-.post-content .highlight .nf { color: #89b4fa; } /* function */
-.post-content .highlight .nc { color: #f9e2af; } /* class */
-.post-content .highlight .nb { color: #f9e2af; } /* builtin */
-.post-content .highlight .mi { color: #fab387; } /* integer */
-.post-content .highlight .mf { color: #fab387; } /* float */
-.post-content .highlight .dl { color: #a6e3a1; } /* delimiter */
-.post-content .highlight .gu { color: #89b4fa; } /* generic */
-/* 行号（如果启用） */
+/* 语法元素颜色（高对比度） */
+.post-content .highlight .k { color: #ff79c6; font-weight: 600; }  /* 关键字 */
+.post-content .highlight .n { color: #f8f8f2; }                   /* 标识符 */
+.post-content .highlight .s { color: #f1fa8c; }                  /* 字符串 */
+.post-content .highlight .c { color: #6272a4; font-style: italic; } /* 注释 */
+.post-content .highlight .p { color: #f8f8f2; }                  /* 标点 */
+.post-content .highlight .o { color: #ff79c6; }                  /* 操作符 */
+.post-content .highlight .nf { color: #50fa7b; }                 /* 函数名 */
+.post-content .highlight .nc { color: #8be9fd; }                 /* 类名 */
+.post-content .highlight .nb { color: #8be9fd; }                 /* 内置函数 */
+.post-content .highlight .mi { color: #f1fa8c; }                 /* 整数 */
+.post-content .highlight .mf { color: #f1fa8c; }                 /* 浮点 */
+.post-content .highlight .dl { color: #f1fa8c; }                 /* 字符串定界符 */
+.post-content .highlight .nv { color: #f8f8f2; }                 /* 变量 */
+.post-content .highlight .vg { color: #f8f8f2; }                 /* 全局变量 */
+.post-content .highlight .vi { color: #f8f8f2; }                 /* 实例变量 */
+.post-content .highlight .kc { color: #ff79c6; }                 /* 常量 */
+.post-content .highlight .kn { color: #ff79c6; }                 /* 命名空间 */
+.post-content .highlight .kr { color: #ff79c6; }                 /* 保留字 */
+.post-content .highlight .kt { color: #8be9fd; }                 /* 类型 */
+.post-content .highlight .sr { color: #f1fa8c; }                 /* 正则 */
+.post-content .highlight .gh { color: #50fa7b; }                 /* 通用头 */
+.post-content .highlight .gi { color: #50fa7b; }                 /* git 插入 */
+.post-content .highlight .gd { color: #ff5555; }                 /* git 删除 */
+.post-content .highlight .gu { color: #8be9fd; }                 /* 通用下划线 */
+
+/* 行号（若启用） */
 .post-content .highlight .lineno {
   display: inline-block;
   min-width: 2.2rem;
-  padding-right: 1rem;
-  color: #585b70;
+  padding-right: 1.2rem;
+  color: #6272a4;
   text-align: right;
   user-select: none;
+  border-right: 1px solid #44475a;
+  margin-right: 0.8rem;
 }
 
-/* 复制按钮 */
+/* 复制按钮（更明显） */
 .post-content .highlight::after {
   content: "📋";
   position: absolute;
@@ -628,9 +644,9 @@ body {
   right: 12px;
   font-size: 1rem;
   cursor: pointer;
-  opacity: 0.3;
+  opacity: 0.6;
   transition: opacity 0.2s;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.4);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   color: #fff;
@@ -638,23 +654,35 @@ body {
 .post-content .highlight:hover::after {
   opacity: 1;
 }
-.post-content .highlight::after:hover {
-  opacity: 0.8;
-}
-/* 点击复制提示 */
 .post-content .highlight.copied::after {
   content: "✅";
   opacity: 1;
 }
 
-/* 内联代码 */
+/* 滚动条（不影响对比度） */
+.post-content .highlight::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.post-content .highlight::-webkit-scrollbar-track {
+  background: #282a36;
+}
+.post-content .highlight::-webkit-scrollbar-thumb {
+  background: #44475a;
+  border-radius: 3px;
+}
+.post-content .highlight::-webkit-scrollbar-thumb:hover {
+  background: #6272a4;
+}
+
+/* 内联代码（浅色背景 + 深色文字） */
 .post-content code {
-  background: var(--bg-sidebar);
-  padding: 0.1rem 0.3rem;
+  background: #e9ecef;
+  padding: 0.1rem 0.4rem;
   border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.9em;
-  color: var(--accent);
+  color: #d63384; /* 高亮粉紫 */
 }
 
 /* ---- 响应式：移动端隐藏目录（可折叠） ---- */
