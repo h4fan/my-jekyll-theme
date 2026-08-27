@@ -692,3 +692,150 @@ body {
     display: inline;
   }
 }
+/* ===== Floating TOC (悬浮目录) ===== */
+.floating-toc {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none; /* 让点击穿透，但内部按钮可点击 */
+}
+.floating-toc * {
+  pointer-events: auto; /* 子元素可交互 */
+}
+
+/* 目录切换按钮（始终显示） */
+.toc-toggle-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.toc-toggle-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+.toc-toggle-btn.active {
+  background: var(--text-muted);
+}
+.toc-toggle-label {
+  display: inline;
+}
+
+/* 目录面板（默认隐藏） */
+.toc-panel {
+  background: var(--bg-body);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  padding: 1rem 1.2rem;
+  max-width: 280px;
+  max-height: 60vh;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.toc-panel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.toc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.toc-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0 0.2rem;
+}
+.toc-close-btn:hover {
+  color: var(--accent);
+}
+.toc-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.toc-content li {
+  margin-bottom: 0.3rem;
+}
+.toc-content li ul {
+  padding-left: 1.2rem;
+  margin-top: 0.2rem;
+}
+.toc-link {
+  display: block;
+  padding: 0.2rem 0.4rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.toc-link:hover {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.toc-link.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* 移动端：调整位置和按钮样式 */
+@media (max-width: 768px) {
+  .floating-toc {
+    right: 10px;
+    bottom: 20px;
+    top: auto;
+    transform: none;
+  }
+  .toc-toggle-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 30px;
+  }
+  .toc-toggle-label {
+    display: none; /* 只显示图标 */
+  }
+  .toc-panel {
+    max-width: 260px;
+    max-height: 50vh;
+    margin-top: 0.3rem;
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .toc-panel {
+    max-width: 220px;
+    padding: 0.8rem;
+  }
+}
