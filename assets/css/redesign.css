@@ -578,65 +578,66 @@ body {
 }
 
 /* ---- 代码块美化 ---- */
-/* ---- 代码块高亮（高对比度版） ---- */
+/* ---- 代码块高亮（白天模式 - 高对比度） ---- */
 .post-content .highlight {
   position: relative;
   margin: 1.2rem 0;
   border-radius: 8px;
   overflow: auto;
-  background: #1e1e2e; /* 深色背景 */
-  border: 1px solid #44475a;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  background: #f6f8fa;  /* 浅灰背景，与白天主题一致 */
+  border: 1px solid #d0d7de;
+  box-shadow: none;
 }
 .post-content .highlight pre {
   padding: 1rem 1.2rem;
   margin: 0;
   font-family: 'JetBrains Mono', 'Consolas', monospace;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   line-height: 1.6;
-  color: #f8f8f2; /* 高亮度主体文字 */
+  color: #1f2328;  /* 深色文字，高对比度 */
   background: transparent;
   overflow-x: auto;
 }
-/* 语法元素颜色（高对比度） */
-.post-content .highlight .k { color: #ff79c6; font-weight: 600; }  /* 关键字 */
-.post-content .highlight .n { color: #f8f8f2; }                   /* 标识符 */
-.post-content .highlight .s { color: #f1fa8c; }                  /* 字符串 */
-.post-content .highlight .c { color: #6272a4; font-style: italic; } /* 注释 */
-.post-content .highlight .p { color: #f8f8f2; }                  /* 标点 */
-.post-content .highlight .o { color: #ff79c6; }                  /* 操作符 */
-.post-content .highlight .nf { color: #50fa7b; }                 /* 函数名 */
-.post-content .highlight .nc { color: #8be9fd; }                 /* 类名 */
-.post-content .highlight .nb { color: #8be9fd; }                 /* 内置函数 */
-.post-content .highlight .mi { color: #f1fa8c; }                 /* 整数 */
-.post-content .highlight .mf { color: #f1fa8c; }                 /* 浮点 */
-.post-content .highlight .dl { color: #f1fa8c; }                 /* 字符串定界符 */
-.post-content .highlight .nv { color: #f8f8f2; }                 /* 变量 */
-.post-content .highlight .vg { color: #f8f8f2; }                 /* 全局变量 */
-.post-content .highlight .vi { color: #f8f8f2; }                 /* 实例变量 */
-.post-content .highlight .kc { color: #ff79c6; }                 /* 常量 */
-.post-content .highlight .kn { color: #ff79c6; }                 /* 命名空间 */
-.post-content .highlight .kr { color: #ff79c6; }                 /* 保留字 */
-.post-content .highlight .kt { color: #8be9fd; }                 /* 类型 */
-.post-content .highlight .sr { color: #f1fa8c; }                 /* 正则 */
-.post-content .highlight .gh { color: #50fa7b; }                 /* 通用头 */
-.post-content .highlight .gi { color: #50fa7b; }                 /* git 插入 */
-.post-content .highlight .gd { color: #ff5555; }                 /* git 删除 */
-.post-content .highlight .gu { color: #8be9fd; }                 /* 通用下划线 */
 
-/* 行号（若启用） */
+/* 语法元素颜色（深色系，适合浅色背景） */
+.post-content .highlight .k { color: #d73a49; font-weight: 600; }  /* 关键字 (红) */
+.post-content .highlight .n { color: #1f2328; }                   /* 标识符 (黑) */
+.post-content .highlight .s { color: #032f62; }                  /* 字符串 (深蓝) */
+.post-content .highlight .c { color: #6a737d; font-style: italic; } /* 注释 (灰) */
+.post-content .highlight .p { color: #1f2328; }                  /* 标点 (黑) */
+.post-content .highlight .o { color: #d73a49; }                  /* 操作符 (红) */
+.post-content .highlight .nf { color: #6f42c1; }                 /* 函数名 (紫) */
+.post-content .highlight .nc { color: #6f42c1; }                 /* 类名 (紫) */
+.post-content .highlight .nb { color: #6f42c1; }                 /* 内置函数 (紫) */
+.post-content .highlight .mi { color: #005cc5; }                 /* 整数 (蓝) */
+.post-content .highlight .mf { color: #005cc5; }                 /* 浮点 (蓝) */
+.post-content .highlight .dl { color: #032f62; }                 /* 字符串定界符 */
+.post-content .highlight .nv { color: #1f2328; }                 /* 变量 (黑) */
+.post-content .highlight .vg { color: #1f2328; }                 /* 全局变量 */
+.post-content .highlight .vi { color: #1f2328; }                 /* 实例变量 */
+.post-content .highlight .kc { color: #d73a49; }                 /* 常量 (红) */
+.post-content .highlight .kn { color: #d73a49; }                 /* 命名空间 */
+.post-content .highlight .kr { color: #d73a49; }                 /* 保留字 */
+.post-content .highlight .kt { color: #6f42c1; }                 /* 类型 (紫) */
+.post-content .highlight .sr { color: #032f62; }                 /* 正则 (深蓝) */
+.post-content .highlight .gh { color: #1f2328; }                 /* 通用头 */
+.post-content .highlight .gi { color: #22863a; }                 /* git 插入 (绿) */
+.post-content .highlight .gd { color: #b31d28; }                 /* git 删除 (红) */
+.post-content .highlight .gu { color: #6f42c1; }                 /* 通用下划线 (紫) */
+
+/* 行号（若不需要可注释） */
 .post-content .highlight .lineno {
   display: inline-block;
   min-width: 2.2rem;
   padding-right: 1.2rem;
-  color: #6272a4;
+  color: #6a737d;
   text-align: right;
   user-select: none;
-  border-right: 1px solid #44475a;
+  border-right: 1px solid #d0d7de;
   margin-right: 0.8rem;
 }
 
-/* 复制按钮（更明显） */
+/* 复制按钮（白天模式适配） */
 .post-content .highlight::after {
   content: "📋";
   position: absolute;
@@ -646,10 +647,10 @@ body {
   cursor: pointer;
   opacity: 0.6;
   transition: opacity 0.2s;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.04);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
-  color: #fff;
+  color: #1f2328;
 }
 .post-content .highlight:hover::after {
   opacity: 1;
@@ -659,32 +660,32 @@ body {
   opacity: 1;
 }
 
-/* 滚动条（不影响对比度） */
+/* 滚动条（浅色适配） */
 .post-content .highlight::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 .post-content .highlight::-webkit-scrollbar-track {
-  background: #282a36;
+  background: #f0f0f0;
 }
 .post-content .highlight::-webkit-scrollbar-thumb {
-  background: #44475a;
+  background: #c0c0c0;
   border-radius: 3px;
 }
 .post-content .highlight::-webkit-scrollbar-thumb:hover {
-  background: #6272a4;
+  background: #a0a0a0;
 }
 
-/* 内联代码（浅色背景 + 深色文字） */
+/* 内联代码（白天模式） */
 .post-content code {
   background: #e9ecef;
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.9em;
-  color: #d63384; /* 高亮粉紫 */
+  color: #d63384;
+  font-weight: 500;
 }
-
 /* ---- 响应式：移动端隐藏目录（可折叠） ---- */
 @media (max-width: 1024px) {
   .post-body-wrapper {
