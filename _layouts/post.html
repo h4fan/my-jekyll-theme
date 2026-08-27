@@ -121,9 +121,8 @@ layout: default
     });
 
     tocContainer.appendChild(tocList);
-    openToc();
 
-    // 控制面板显示
+    // ===== 控制面板显示 =====
     const panel = document.getElementById('toc-panel');
     const toggleBtn = document.getElementById('toc-toggle-btn');
     const closeBtn = document.getElementById('toc-close-btn');
@@ -137,6 +136,10 @@ layout: default
       toggleBtn.classList.remove('active');
     }
 
+    // ===== 【修复】在函数定义之后再调用 openToc() =====
+    openToc();  // 强制展开目录
+
+    // 切换按钮
     toggleBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       if (panel.classList.contains('open')) {
