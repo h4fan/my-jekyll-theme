@@ -1,0 +1,33 @@
+---
+layout: default
+---
+
+<div class="page-header">
+  <h1>文章归档</h1>
+  <p>按时间倒序查看所有文章</p>
+</div>
+
+<div class="archive-list">
+  {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+  {% for year_group in posts_by_year %}
+    {% assign year = year_group.name %}
+    <section class="archive-year">
+      <h2 class="archive-year-title">{{ year }}</h2>
+      {% assign posts_by_month = year_group.items | group_by_exp: "post", "post.date | date: '%m'" %}
+      {% for month_group in posts_by_month %}
+        {% assign month = month_group.name %}
+        <div class="archive-month">
+          <h3 class="archive-month-title">{{ month }} 月</h3>
+          <ul class="archive-post-list">
+            {% for post in month_group.items %}
+              <li>
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </section>
+  {% endfor %}
+</div>
